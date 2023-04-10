@@ -4,6 +4,8 @@ const fs = require('fs')
 const server =  express()
 const port = 3001
 
+server.use(express.json())
+server.use(express.urlencoded({ extended: true }));
 server.use(express.static('public'))
 
 server.get('/notes', (req, res)=>{
@@ -15,12 +17,15 @@ server.get('/api/notes', (req, res)=>{
 })
 
 server.post('/api/notes', (req, res)=>{
-    const {title, text} = req.body
+    console.log(req.body)
+    const title = req.body["title"]
+    const text = req.body["text"]
     if(title && text){
         fs.readFile('./db/db.json', 'utf8', (err, data)=>{
             let newData = JSON.parse(data)
             newData.push({"title": title, "text": text})
             fs.writeFile('./db/db.json', JSON.stringify(newData), (err)=>err? console.log('Failed to write to db.json.'): console.log('Write successful.'))
+            res.status(201).json(newData)
         })
     }else{
         res.status(500).json('Error in finding new db items.')
