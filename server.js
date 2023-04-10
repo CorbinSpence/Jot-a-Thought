@@ -6,10 +6,6 @@ const port = 3001
 
 server.use(express.static('public'))
 
-server.get('*', (req, res)=>{
-    res.sendFile(path.join(__dirname, "public/index.html"))
-})
-
 server.get('/notes', (req, res)=>{
     res.sendFile(path.join(__dirname, 'public/notes.html'))
 })
@@ -30,6 +26,10 @@ server.post('/api/notes', (req, res)=>{
         res.status(500).json('Error in finding new db items.')
     }
     
+})
+
+server.get('*', (req, res)=>{
+    res.sendFile(path.join(__dirname, "public/index.html"))
 })
 
 server.listen(port, console.log("Open page at port ", port))
